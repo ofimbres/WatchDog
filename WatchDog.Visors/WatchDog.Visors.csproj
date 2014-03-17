@@ -63,6 +63,7 @@
       <DependentUpon>KinectSkeletonViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="KinectViewer.cs" />
+    <Compile Include="OutputImageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

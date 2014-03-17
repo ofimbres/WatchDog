@@ -12,19 +12,6 @@ namespace WatchDog.Visors
     using System.Windows.Data;
     using Microsoft.Kinect;
 
-    public enum ImageType
-    {
-        /// <summary>
-        /// The Color Image
-        /// </summary>
-        Color,
-
-        /// <summary>
-        /// The Depth Image
-        /// </summary>
-        Depth,
-    }
-
     /// <summary>
     /// Interaction logic for KinectSkeletonViewer.xaml
     /// </summary>
@@ -50,13 +37,6 @@ namespace WatchDog.Visors
                 typeof(bool),
                 typeof(KinectSkeletonViewer),
                 new PropertyMetadata(true));
-
-        public static readonly DependencyProperty ImageTypeProperty =
-            DependencyProperty.Register(
-                "ImageType",
-                typeof(ImageType),
-                typeof(KinectSkeletonViewer),
-                new PropertyMetadata(ImageType.Color));
 
         private const int SkeletonCount = 6;
         private readonly List<KinectSkeleton> skeletonCanvases = new List<KinectSkeleton>(SkeletonCount);
@@ -87,12 +67,6 @@ namespace WatchDog.Visors
         {
             get { return (bool)GetValue(ShowCenterProperty); }
             set { SetValue(ShowCenterProperty, value); }
-        }
-
-        public ImageType ImageType
-        {
-            get { return (ImageType)GetValue(ImageTypeProperty); }
-            set { SetValue(ImageTypeProperty, value); }
         }
 
         protected override void OnKinectSensorChanged(object sender, KinectSensorManagerEventArgs<KinectSensor> args)
@@ -127,7 +101,6 @@ namespace WatchDog.Visors
         /// <returns>Returns the 2D position of the provided 3D SkeletonPoint.</returns>
         private static Point Get2DPosition(
             KinectSensor sensor,
-            ImageType imageType,
             Size renderSize,
             SkeletonPoint skeletonPoint,
             ColorImageFormat colorFormat,
@@ -139,31 +112,14 @@ namespace WatchDog.Visors
         {
             try
             {
-                switch (imageType)
+                if (ColorImageFormat.Undefined != colorFormat)
                 {
-                    case ImageType.Color:
-                        if (ColorImageFormat.Undefined != colorFormat)
-                        {
-                            var colorPoint = sensor.CoordinateMapper.MapSkeletonPointToColorPoint(skeletonPoint, colorFormat);
+                    var colorPoint = sensor.CoordinateMapper.MapSkeletonPointToColorPoint(skeletonPoint, colorFormat);
 
-                            // map back to skeleton.Width & skeleton.Height
-                            return new Point(
-                                (int)(renderSize.Width * colorPoint.X / colorWidth),
-                                (int)(renderSize.Height * colorPoint.Y / colorHeight));
-                        }
-
-                        break;
-                    case ImageType.Depth:
-                        if (DepthImageFormat.Undefined != depthFormat)
-                        {
-                            var depthPoint = sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skeletonPoint, depthFormat);
-
-                            return new Point(
-                                (int)(renderSize.Width * depthPoint.X / depthWidth),
-                                (int)(renderSize.Height * depthPoint.Y / depthHeight));
-                        }
-
-                        break;
+                    // map back to skeleton.Width & skeleton.Height
+                    return new Point(
+                        (int)(renderSize.Width * colorPoint.X / colorWidth),
+                        (int)(renderSize.Height * colorPoint.Y / colorHeight));
                 }
             }
             catch (InvalidOperationException)
@@ -221,46 +177,21 @@ namespace WatchDog.Visors
                 int depthWidth = 0;
                 int depthHeight = 0;
 
-                switch (this.ImageType)
+                // Retrieve the current color format, from the frame if present, and from the sensor if not.
+                using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
                 {
-                case ImageType.Color:
-                    // Retrieve the current color format, from the frame if present, and from the sensor if not.
-                    using (ColorImageFrame colorImageFrame = e.OpenColorImageFrame())
+                    if (null != colorImageFrame)
                     {
-                        if (null != colorImageFrame)
-                        {
-                            colorFormat = colorImageFrame.Format;
-                            colorWidth = colorImageFrame.Width;
-                            colorHeight = colorImageFrame.Height;
-                        }
-                        else if (null != sensor.ColorStream)
-                        {
-                            colorFormat = sensor.ColorStream.Format;
-                            colorWidth = sensor.ColorStream.FrameWidth;
-                            colorHeight = sensor.ColorStream.FrameHeight;
-                        }
+                        colorFormat = colorImageFrame.Format;
+                        colorWidth = colorImageFrame.Width;
+                        colorHeight = colorImageFrame.Height;
                     }
-
-                    break;
-                case ImageType.Depth:
-                    // Retrieve the current depth format, from the frame if present, and from the sensor if not.
-                    using (DepthImageFrame depthImageFrame = e.OpenDepthImageFrame())
+                    else if (null != sensor.ColorStream)
                     {
-                        if (null != depthImageFrame)
-                        {
-                            depthFormat = depthImageFrame.Format;
-                            depthWidth = depthImageFrame.Width;
-                            depthHeight = depthImageFrame.Height;
-                        }
-                        else if (null != sensor.DepthStream)
-                        {
-                            depthFormat = sensor.DepthStream.Format;
-                            depthWidth = sensor.DepthStream.FrameWidth;
-                            depthHeight = sensor.DepthStream.FrameHeight;
-                        }
+                        colorFormat = sensor.ColorStream.Format;
+                        colorWidth = sensor.ColorStream.FrameWidth;
+                        colorHeight = sensor.ColorStream.FrameHeight;
                     }
-
-                    break;
                 }
 
                 for (int i = 0; i < this.skeletonData.Length && i < this.skeletonCanvases.Count; i++)
@@ -279,7 +210,6 @@ namespace WatchDog.Visors
                         {
                             Point mappedPoint = Get2DPosition(
                                 sensor,
-                                this.ImageType,
                                 this.RenderSize,
                                 joint.Position, 
                                 colorFormat, 
@@ -305,7 +235,6 @@ namespace WatchDog.Visors
                     // Look up the center point
                     Point centerPoint = Get2DPosition(
                         sensor,
-                        this.ImageType,
                         this.RenderSize,
                         skeleton.Position, 
                         colorFormat, 

@@ -27,6 +27,8 @@ namespace WatchDog.Visors
             InitializeComponent();
         }
 
+        public event EventHandler<OutputImageEventArgs> OutputImageChanged;
+
         protected override void OnKinectSensorChanged(object sender, KinectSensorManagerEventArgs<KinectSensor> args)
         {
             if (null == args)
@@ -171,6 +173,11 @@ namespace WatchDog.Visors
                         this.pixelData,
                         imageFrame.Width * bytesPerPixel,
                         0);
+
+                    if (OutputImageChanged != null)
+                    {
+                        OutputImageChanged(this, new OutputImageEventArgs(this.outputImage));
+                    }
 
                     this.lastImageFormat = imageFrame.Format;
 
