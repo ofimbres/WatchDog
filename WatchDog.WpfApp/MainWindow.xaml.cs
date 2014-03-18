@@ -17,6 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using WatchDog.Visors;
+using WatchDog.WpfApp.Models;
+using WatchDog.WpfApp.Tables;
 using WatchDog.WpfApp.Utils;
 
 namespace WatchDog.WpfApp
@@ -28,7 +30,8 @@ namespace WatchDog.WpfApp
     {
         private KinectSensorManager ksm;
         private DispatcherTimer timer;
-        private WriteableBitmap lastImage;
+        private byte[] lastImageData;
+        private WriteableBitmap lastFrame;
 
         //private readonly KinectWindowViewModel viewModel;
         //private KinectSensor sensor;
@@ -42,7 +45,7 @@ namespace WatchDog.WpfApp
             ksm = new KinectSensorManager();
             ksm.KinectSensor = KinectSensor.KinectSensors.First();
             ksm.ColorFormat = ColorImageFormat.InfraredResolution640x480Fps30;
-            ksm.SkeletonStreamEnabled = false;
+            ksm.SkeletonStreamEnabled = true;
             ksm.ColorStreamEnabled = true;
 
             this.DataContext = ksm;
@@ -81,15 +84,18 @@ namespace WatchDog.WpfApp
         // http://stackoverflow.com/a/8067336/1118485
         private void ColorViewer_OutputImageChanged(object sender, OutputImageEventArgs e)
         {
-            lastImage = e.Frame;
+            lastImageData = e.RawPhotoData;
+            lastFrame = e.Frame;
             Debug.WriteLine("frame updated");
         }
 
         // http://stackoverflow.com/a/11720080/1118485
         private void TimerTick(object sender, EventArgs e)
         {
-            WriteableBitmap currentFrame = lastImage.Clone();
-            PhotoCreatorUtil.CreatePhoto(currentFrame);
+            CamAudit cam = new CamAudit(DateTime.Now, "Kinect Device 1", (byte[])lastImageData.Clone());
+            //PhotoCreatorUtil.CreatePhoto(lastFrame);
+            PhotoCreatorUtil.List();
+            //PhotoCreatorUtil.CreatePhoto(currentFrame);
         }
 
         private void statusBarText_Checked(object sender, RoutedEventArgs e)
@@ -100,6 +106,14 @@ namespace WatchDog.WpfApp
         private void statusBarText_Unchecked(object sender, RoutedEventArgs e)
         {
             ksm.ColorFormat = ColorImageFormat.RgbResolution1280x960Fps12;
+        }
+
+        private void KinectSkeletonViewer_SkeletonTrackingStateChanged(object sender, Visors.EventHandlers.SkeletonTrackingStateEventArgs e)
+        {
+            if (e.SkeletonDetected)
+            {
+                Debug.WriteLine("Detected!!!!!!!!!!!!!!!11");
+            }
         }
     }
 }

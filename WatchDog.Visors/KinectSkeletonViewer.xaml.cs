@@ -11,6 +11,9 @@ namespace WatchDog.Visors
     using System.Windows;
     using System.Windows.Data;
     using Microsoft.Kinect;
+    using System.Diagnostics;
+    using WatchDog.Visors.EventHandlers;
+    using System.Linq;
 
     /// <summary>
     /// Interaction logic for KinectSkeletonViewer.xaml
@@ -50,6 +53,8 @@ namespace WatchDog.Visors
             this.ShowBones = true;
             this.ShowCenter = true;
         }
+
+        public event EventHandler<SkeletonTrackingStateEventArgs> SkeletonTrackingStateChanged;
 
         public bool ShowBones
         {
@@ -252,6 +257,12 @@ namespace WatchDog.Visors
                     skeletonCanvas.JointMappings = jointMapping;
                     skeletonCanvas.Center = centerPoint;
                     skeletonCanvas.ScaleFactor = scale;
+                }
+
+                if (SkeletonTrackingStateChanged != null)
+                {
+                   int skeletonsDetectedCount = skeletonData.Count(s => s.TrackingState== SkeletonTrackingState.Tracked);
+                   SkeletonTrackingStateChanged(this, new SkeletonTrackingStateEventArgs(skeletonsDetectedCount));
                 }
             }
         }

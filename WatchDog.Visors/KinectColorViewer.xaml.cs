@@ -176,7 +176,7 @@ namespace WatchDog.Visors
 
                     if (OutputImageChanged != null)
                     {
-                        OutputImageChanged(this, new OutputImageEventArgs(this.outputImage));
+                        OutputImageChanged(this, new OutputImageEventArgs(this.pixelData, this.outputImage));
                     }
 
                     this.lastImageFormat = imageFrame.Format;

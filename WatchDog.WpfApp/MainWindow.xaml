@@ -25,7 +25,9 @@
                                     KinectSensorManager="{Binding}"
                                     Visibility="{Binding ColorStreamEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                                     Width="{Binding ElementName=ColorViewer,Path=ActualWidth}"
-                                    Height="{Binding ElementName=ColorViewer,Path=ActualHeight}" />
+                                    Height="{Binding ElementName=ColorViewer,Path=ActualHeight}"
+                    SkeletonTrackingStateChanged="KinectSkeletonViewer_SkeletonTrackingStateChanged"
+                               />
                 <!--</Canvas>-->
             </Grid>
         </Viewbox>

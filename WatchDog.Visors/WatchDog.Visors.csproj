@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters.cs" />
+    <Compile Include="EventHandlers\SkeletonTrackingStateEventArgs.cs" />
     <Compile Include="JointMapping.cs" />
     <Compile Include="KinectColorViewer.xaml.cs">
       <DependentUpon>KinectColorViewer.xaml</DependentUpon>
@@ -63,7 +64,7 @@
       <DependentUpon>KinectSkeletonViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="KinectViewer.cs" />
-    <Compile Include="OutputImageEventArgs.cs" />
+    <Compile Include="EventHandlers\OutputImageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
