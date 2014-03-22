@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>OSCAR-PC</Machine>
+    <WindowsUser>OscarDaniel</WindowsUser>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+    <PackageIdentityName>48166OscarFimbres.WatchDog</PackageIdentityName>
+    <RegisteredManifestChecksum>FC8C1D523D7E09C870B28FE25AE461C868DF2F9F2A6DC754B8F8AC27537DCC36</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>48166OscarFimbres.WatchDog_1.0.0.0_neutral__n6j7s0f7ea1p0</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>48166OscarFimbres.WatchDog_n6j7s0f7ea1p0!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>48166OscarFimbres.WatchDog</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=284C3F70-87E4-42FF-A2EC-937B186281D4</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2014-03-21T07:23:35.336</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\bin\Debug\WatchDog.W8Demo.exe">
+      <PackagePath>WatchDog.W8Demo.exe</PackagePath>
+      <Modified>2014-03-21T07:24:40.928</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\packages\WindowsAzure.Messaging.Managed.0.1.7.6\lib\netcore45\Microsoft.WindowsAzure.Messaging.Managed.dll">
+      <PackagePath>Microsoft.WindowsAzure.Messaging.Managed.dll</PackagePath>
+      <Modified>2014-03-19T04:14:22.358</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\packages\WindowsAzure.MobileServices.1.1.4\lib\netcore45\Microsoft.WindowsAzure.Mobile.dll">
+      <PackagePath>Microsoft.WindowsAzure.Mobile.dll</PackagePath>
+      <Modified>2014-03-21T05:19:43.522</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\packages\WindowsAzure.MobileServices.1.1.4\lib\netcore45\Microsoft.WindowsAzure.Mobile.Ext.dll">
+      <PackagePath>Microsoft.WindowsAzure.Mobile.Ext.dll</PackagePath>
+      <Modified>2014-03-21T05:19:43.534</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\packages\Newtonsoft.Json.5.0.8\lib\netcore45\Newtonsoft.Json.dll">
+      <PackagePath>Newtonsoft.Json.dll</PackagePath>
+      <Modified>2014-03-21T05:05:20.481</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\packages\Microsoft.Net.Http.2.2.15\lib\win8\System.Net.Http.Extensions.dll">
+      <PackagePath>System.Net.Http.Extensions.dll</PackagePath>
+      <Modified>2014-03-21T06:34:33.991</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\packages\Microsoft.Net.Http.2.2.15\lib\win8\System.Net.Http.Primitives.dll">
+      <PackagePath>System.Net.Http.Primitives.dll</PackagePath>
+      <Modified>2014-03-21T06:34:34.006</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\Assets\Logo.scale-100.png">
+      <PackagePath>Assets\Logo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-07-23T11:01:02.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\Assets\SmallLogo.scale-100.png">
+      <PackagePath>Assets\SmallLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-07-23T11:01:02.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\Assets\SplashScreen.scale-100.png">
+      <PackagePath>Assets\SplashScreen.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-07-23T11:01:02.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\Assets\StoreLogo.scale-100.png">
+      <PackagePath>Assets\StoreLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-07-23T11:01:02.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\bin\Debug\App.xbf">
+      <PackagePath>App.xbf</PackagePath>
+      <Modified>2014-03-19T01:52:14.242</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\bin\Debug\MainPage.xbf">
+      <PackagePath>MainPage.xbf</PackagePath>
+      <Modified>2014-03-19T01:52:14.246</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\OscarDaniel\Documents\Visual Studio 2013\Projects\WatchDog\WatchDog.W8Demo\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <Modified>2014-03-21T07:23:33.802</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>
