@@ -2,7 +2,8 @@
         xmlns:kt="clr-namespace:WatchDog.Visors;assembly=WatchDog.Visors"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        Background="#FF9238AC">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -10,13 +11,22 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="45" />
-        </Grid.RowDefinitions>
-        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Background="White">
+            <Button x:Name="TurnOnRGBVisorButton" Content="Turn on RGB Visor" Click="TurnOnRGBVisorButton_Click" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" Margin="10,10,0,0" />
+            <Button x:Name="TurnOnInfrarredVisorButton" Content="Turn on Infrarred Visor" Click="TurnOnInfrarredVisorButton_Click" Margin="10,57,0,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" />
+
+            <Button x:Name="AbleSkeletonTrackingButton" Content="Able Skeleton Tracking" Click="AbleSkeletonTrackingButton_Click" Margin="0,104,10,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="180" />
+            <Button x:Name="DisableSkeletonTrackingButton" Content="Disable Skeleton Tracking" Click="DisableSkeletonTrackingButton_Click" Margin="0,151,10,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="180" />
+        </Grid>
+
+        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1">
             <Grid>
                 <kt:KinectColorViewer x:Name="ColorViewer" KinectSensorManager="{Binding}" CollectFrameRate="True" RetainImageOnSensorChange="True"
                                       OutputImageChanged="ColorViewer_OutputImageChanged"  />
@@ -31,9 +41,5 @@
                 <!--</Canvas>-->
             </Grid>
         </Viewbox>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <ToggleButton x:Name="statusBarText" Content="TURN ON INFRARRED" Width="140" Checked="statusBarText_Checked" Unchecked="statusBarText_Unchecked" />
-        </StackPanel>
     </Grid>
 </Window>

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,9 +18,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using WatchDog.Visors;
-using WatchDog.WpfApp.Models;
-using WatchDog.WpfApp.Tables;
-using WatchDog.WpfApp.Utils;
 
 namespace WatchDog.WpfApp
 {
@@ -30,12 +28,10 @@ namespace WatchDog.WpfApp
     {
         private KinectSensorManager ksm;
         private DispatcherTimer timer;
-        private byte[] lastImageData;
         private WriteableBitmap lastFrame;
 
         //private readonly KinectWindowViewModel viewModel;
-        //private KinectSensor sensor;
-        //private byte[] colorPixels;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +49,7 @@ namespace WatchDog.WpfApp
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            SetDefaultValues();
             //this.viewModel = new KinectWindowViewModel();
 
             //// The KinectSensorManager class is a wrapper for a KinectSensor that adds
@@ -81,39 +78,72 @@ namespace WatchDog.WpfApp
 
         }
 
-        // http://stackoverflow.com/a/8067336/1118485
+        // http://stackoverflow.com/a/11720080/1118485
+        private async void TimerTick(object sender, EventArgs e)
+        {
+            await AzureStorageHelper.UploadImage(lastFrame);
+        }
+
+        #region KINECT EVENTS
+        // Creation of custom event handlers and delegates
+
         private void ColorViewer_OutputImageChanged(object sender, OutputImageEventArgs e)
         {
-            lastImageData = e.RawPhotoData;
             lastFrame = e.Frame;
             Debug.WriteLine("frame updated");
         }
 
-        // http://stackoverflow.com/a/11720080/1118485
-        private void TimerTick(object sender, EventArgs e)
+        private bool notifFlag;
+        private async void KinectSkeletonViewer_SkeletonTrackingStateChanged(object sender, Visors.EventHandlers.SkeletonTrackingStateEventArgs e)
         {
-            CamAudit cam = new CamAudit(DateTime.Now, "Kinect Device 1", (byte[])lastImageData.Clone());
-            //PhotoCreatorUtil.CreatePhoto(lastFrame);
-            PhotoCreatorUtil.List();
-            //PhotoCreatorUtil.CreatePhoto(currentFrame);
+            if (e.SkeletonDetected && !notifFlag)
+            {
+                notifFlag = true;
+
+                Debug.WriteLine("Human detected");
+                await NotificationHubHelper.SendNotificationAsync();
+
+                // avoid to 
+                await Task.Delay(10000);
+                notifFlag = false;
+            }
+        }
+        #endregion
+
+        private void SetDefaultValues()
+        {
+            TurnOnInfrarredVisorButton_Click(null, null);
+            AbleSkeletonTrackingButton_Click(null, null);
         }
 
-        private void statusBarText_Checked(object sender, RoutedEventArgs e)
+        #region CONTROLS EVENTS
+        private void TurnOnRGBVisorButton_Click(object sender, RoutedEventArgs e)
         {
-            ksm.ColorFormat = ColorImageFormat.InfraredResolution640x480Fps30;
-        }
-
-        private void statusBarText_Unchecked(object sender, RoutedEventArgs e)
-        {
+            TurnOnRGBVisorButton.IsEnabled = false;
+            TurnOnInfrarredVisorButton.IsEnabled = true;
             ksm.ColorFormat = ColorImageFormat.RgbResolution1280x960Fps12;
         }
 
-        private void KinectSkeletonViewer_SkeletonTrackingStateChanged(object sender, Visors.EventHandlers.SkeletonTrackingStateEventArgs e)
+        private void TurnOnInfrarredVisorButton_Click(object sender, RoutedEventArgs e)
         {
-            if (e.SkeletonDetected)
-            {
-                Debug.WriteLine("Detected!!!!!!!!!!!!!!!11");
-            }
+            TurnOnRGBVisorButton.IsEnabled = true;
+            TurnOnInfrarredVisorButton.IsEnabled = false;
+            ksm.ColorFormat = ColorImageFormat.InfraredResolution640x480Fps30;
         }
+
+        private void DisableSkeletonTrackingButton_Click(object sender, RoutedEventArgs e)
+        {
+            AbleSkeletonTrackingButton.IsEnabled = true;
+            DisableSkeletonTrackingButton.IsEnabled = false;
+            ksm.SkeletonStreamEnabled = false;
+        }
+
+        private void AbleSkeletonTrackingButton_Click(object sender, RoutedEventArgs e)
+        {
+            AbleSkeletonTrackingButton.IsEnabled = false;
+            DisableSkeletonTrackingButton.IsEnabled = true;
+            ksm.SkeletonStreamEnabled = true;
+        }
+        #endregion
     }
 }
