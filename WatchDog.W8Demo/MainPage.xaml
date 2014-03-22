@@ -8,6 +8,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <ListBox x:Name="listbox" HorizontalAlignment="Left" Height="255" Margin="37,138,0,0" VerticalAlignment="Top" Width="240">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding Source}" />
+                 </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Create Subscription" HorizontalAlignment="Left" Margin="347,50,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <TextBox x:Name="textbox" HorizontalAlignment="Left" Margin="37,53,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="286"/>
     </Grid>
 </Page>

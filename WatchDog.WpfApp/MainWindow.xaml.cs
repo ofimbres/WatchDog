@@ -18,6 +18,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using WatchDog.Visors;
+using WatchDog.WpfApp.Helpers;
+using WatchDog.WpfApp.Models;
 
 namespace WatchDog.WpfApp
 {
@@ -81,7 +83,7 @@ namespace WatchDog.WpfApp
         // http://stackoverflow.com/a/11720080/1118485
         private async void TimerTick(object sender, EventArgs e)
         {
-            await AzureStorageHelper.UploadImage(lastFrame);
+            await PublishPhoto();
         }
 
         #region KINECT EVENTS
@@ -114,6 +116,23 @@ namespace WatchDog.WpfApp
         {
             TurnOnInfrarredVisorButton_Click(null, null);
             AbleSkeletonTrackingButton_Click(null, null);
+        }
+
+        private async Task PublishPhoto()
+        {
+            // Step 1: Upload to a blob storage
+            var uri = await AzureStorageHelper.UploadImage(lastFrame);
+
+            // Step 2: Insert new url to a Mobile Services table triggering
+            // a ServiceBus Topic 
+            PhotoAudit photo = new PhotoAudit()
+            {
+                Url = uri.AbsoluteUri,
+                CreatedDate = DateTime.Now
+            };
+            await MobileServicesHelper.InsertPhotoAudit(photo);
+
+            Debug.WriteLine("Photo published successfully: " + photo.Id + ", " + photo.Url);
         }
 
         #region CONTROLS EVENTS

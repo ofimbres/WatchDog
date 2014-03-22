@@ -9,7 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using WatchDog.W8Demo;
+using WatchDog.WpfApp.Helpers;
+using WatchDog.WpfApp.Models;
 
 namespace WatchDog.WpfApp
 {
@@ -39,12 +40,7 @@ namespace WatchDog.WpfApp
 
                 CloudBlockBlob blob = await UploadImageToBlobContainer(time, fs);
                 string url = blob.Uri.AbsoluteUri;
-
-                PublishQueueMessage(url);
-
-                //ServiceBus sb = ServiceBus
-                //    .Setup(ServiceBusUtilities.GetServiceBusCredentials())
-                //    .Publish<ImageStoredMessage>(new ImageStoredMessage(url));
+                //PublishQueueMessage(url);
 
                 return blob.Uri;
             }
@@ -73,24 +69,25 @@ namespace WatchDog.WpfApp
             return blockBlob;
         }
 
-        private static void PublishQueueMessage(string url)
-        {
-            // Retrieve storage account from connection string
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(STORAGE_CONNECTIONSTRING);
+        /////////////////////////////////// could be
+        //private static void PublishQueueMessage(string url)
+        //{
+        //    // Retrieve storage account from connection string
+        //    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(STORAGE_CONNECTIONSTRING);
 
-            // Create the queue client
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+        //    // Create the queue client
+        //    CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
 
-            // Retrieve a reference to a queue
-            CloudQueue queue = queueClient.GetQueueReference(QUEUE_NAME);
+        //    // Retrieve a reference to a queue
+        //    CloudQueue queue = queueClient.GetQueueReference(QUEUE_NAME);
 
-            // Create the queue if it doesn't already exist
-            queue.CreateIfNotExists();
+        //    // Create the queue if it doesn't already exist
+        //    queue.CreateIfNotExists();
 
-            // Create a message and add it to the queue.
-            CloudQueueMessage message = new CloudQueueMessage(url);
-            queue.AddMessage(message);
-        }
+        //    // Create a message and add it to the queue.
+        //    CloudQueueMessage message = new CloudQueueMessage(url);
+        //    queue.AddMessage(message);
+        //}
 
 
         //public static void A()
