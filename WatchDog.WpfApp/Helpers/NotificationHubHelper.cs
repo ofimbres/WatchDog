@@ -16,7 +16,7 @@ namespace WatchDog.WpfApp
             "<?xml version='1.0' encoding='utf-8'?>" +
             "<toast launch='HUMAN_DETECTED'>" +
             "<visual><binding template='ToastText01'>" +
-            "<text id='1'>Test message</text>" +
+            "<text id='1'>Human detected!</text>" +
             "</binding>" +
             "</visual>" +
             "</toast>";
@@ -25,7 +25,7 @@ namespace WatchDog.WpfApp
             "<?xml version='1.0' encoding='utf-8'?>" +
             "<wp:Notification xmlns:wp='WPNotification'>" +
             "<wp:Toast>" +
-            "<wp:Text1>NotificationHub</wp:Text1>" +
+            "<wp:Text1>Human detected!</wp:Text1>" +
             "<wp:Text2>Test message</wp:Text2>" +
             "</wp:Toast>" +
             "</wp:Notification>";

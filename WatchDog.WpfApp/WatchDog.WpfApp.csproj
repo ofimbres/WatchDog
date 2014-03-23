@@ -118,6 +118,7 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\AzureStorageHelper.cs" />
     <Compile Include="Helpers\MobileServicesHelper.cs" />
+    <Compile Include="Helpers\ServiceBusHelper.cs" />
     <Compile Include="Models\ModeHistory.cs" />
     <Compile Include="Models\PhotoAudit.cs" />
     <Compile Include="Helpers\NotificationHubHelper.cs" />

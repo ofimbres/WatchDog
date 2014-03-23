@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using WatchDog.W8Demo.Models;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -34,6 +35,9 @@ namespace WatchDog.W8Demo
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // by default is turnOff camera
+        private bool isActive;
+        private string defaultSubscriberName;
 
         public MainPage()
         {
@@ -47,21 +51,63 @@ namespace WatchDog.W8Demo
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            await GetDefaultSubscriberNameAsync();
+            textbox.Text = defaultSubscriberName;
 
+            // Create subscriptions
+            await ServiceBusHelper.CreateModeStatusSubscription(defaultSubscriberName);
+            this.MODE_STATUS_OKButton.Text = "OK";
+
+            await ServiceBusHelper.CreatePhotoAuditSubscription(defaultSubscriberName);
+            this.PHOTO_AUDIT_OKButton.Text = "OK";
+
+            // Activate listeners
+            RetrieveModeStatusCloudMessages();
+            RetrieveCloudMessages();
+
+            // isActiveOrNot? according to the server
+            isActive = await MobileServicesHelper.GetLastModeStatus();
+
+            // Set button-enabling
+            if (isActive)
+            {
+                this.observingModeButton.IsEnabled = false;
+                this.passiveModeButton.IsEnabled = true;
+            }
+            else
+            {
+                this.observingModeButton.IsEnabled = true;
+                this.passiveModeButton.IsEnabled = false;
+            }
+        }
+
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            string args = e.Parameter.ToString();
+            if (args != "")
+                await ShowDialogToActivateCameraStreaming();
+
+            base.OnNavigatedTo(e);
         }
 
         private ObservableCollection<PhotoViewModel> itemsForListBox;
 
-        private async Task RetrieveCloudMessages(string subscriptionName)
+        private async Task RetrieveCloudMessages()
         {
             var uiDispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
             Subscription subscription =
-                new Subscription(ServiceBusHelper.TOPIC_PATH, subscriptionName, ServiceBusHelper.CONNECTIONSTRING);
+                new Subscription(ServiceBusHelper.TOPIC_PATH_FOR_IMAGES, defaultSubscriberName, ServiceBusHelper.CONNECTIONSTRING);
 
             while (true)
             {
-               
-                var vm = await ServiceBusHelper.RetrieveMessage(subscription);
+                // is that makes sence? I don't think so!
+                //if (!isActive)
+                //{
+                //    await Task.Delay(600);
+                //    continue;
+                //}
+
+                var vm = await ServiceBusHelper.RetrievePhotoAuditMessage(subscription);
 
                 uiDispatcher.RunAsync(CoreDispatcherPriority.Normal,
                                         async () =>
@@ -74,27 +120,68 @@ namespace WatchDog.W8Demo
             }
         }
 
+        private async Task RetrieveModeStatusCloudMessages()
+        {
+            var uiDispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
+            Subscription modeSubscription = new Subscription(ServiceBusHelper.
+                TOPIC_PATH_FOR_MODES, defaultSubscriberName, ServiceBusHelper.CONNECTIONSTRING2);
+
+            while (true)
+            {
+                string modeStatusMessage = await ServiceBusHelper.RetrieveModeStatusMessage(modeSubscription);
+
+                uiDispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                                        async () =>
+                                        {
+                                            if (modeStatusMessage.Equals("1"))
+                                            {
+                                                isActive = true;
+
+                                                this.observingModeButton.IsEnabled = false;
+                                                this.passiveModeButton.IsEnabled = true;
+                                            }
+                                            else
+                                            {
+                                                isActive = false;
+
+                                                this.observingModeButton.IsEnabled = true;
+                                                this.passiveModeButton.IsEnabled = false;
+                                            }
+                                        });
+            }
+        }
+
         private void ScrollToBottom()
         {
             var scrollViewer = listView.GetFirstDescendantOfType<ScrollViewer>();
             scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth);
         }
 
-        private async void InitNotificationsAsync()
+        private async Task GetDefaultSubscriberNameAsync()
         {
             await NotificationHubHelper.CreatePushNotificationChannel();
 
             NotificationHubHelper.Channel.PushNotificationReceived += async (s, e) =>
             {
-                //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-                //  {
-                //      var dialog = new MessageDialog("duma");
-                //      dialog.Commands.Add(new UICommand("OK"));
-                //      await dialog.ShowAsync();
-                //  });
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    await ShowDialogToActivateCameraStreaming();
+                });
             };
 
-            await RegisterDevice();
+            defaultSubscriberName = await RegisterDevice();
+        }
+
+        private async Task ShowDialogToActivateCameraStreaming()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var dialog = new MessageDialog("Activate camera 'Live Streaming?'");
+                dialog.Commands.Add(new UICommand("OK"));
+                dialog.Commands.Add(new UICommand("No"));
+
+                await dialog.ShowAsync();
+            });
         }
 
         private async Task<string> RegisterDevice()
@@ -134,18 +221,8 @@ namespace WatchDog.W8Demo
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //string subscriptionName = textbox.Text;
-            //await ServiceBusHelper.CreateSubscription(subscriptionName);
-
             itemsForListBox = new ObservableCollection<PhotoViewModel>();
             listView.ItemsSource = itemsForListBox;
-            //InitNotificationsAsync();
-
-            await NotificationHubHelper.CreatePushNotificationChannel();
-            var registrationId = await RegisterDevice();
-
-            await ServiceBusHelper.CreateSubscription(registrationId);
-            RetrieveCloudMessages(registrationId);
         }
 
         private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -153,13 +230,28 @@ namespace WatchDog.W8Demo
             PhotoViewModel item = listView.SelectedItem as PhotoViewModel;
             selectedImage.Source = item.Source;
         }
-    }
-    
-    public class PhotoViewModel
-    {
-        public string Url { get; set; }
-        public string CreatedDate { get; set; }
 
-        public ImageSource Source { get; set; }
+        private async void observingModeButton_Click(object sender, RoutedEventArgs e)
+        {
+            observingModeButton.IsEnabled = false;
+            passiveModeButton.IsEnabled = true;
+
+            isActive = true;
+
+            //OBSERVING_MODE
+            ModeHistory item = new ModeHistory() { ModeStatus = "1", CreatedDate = DateTime.Now };
+            await MobileServicesHelper.InsertModeHistory(item);
+        }
+
+        private async void passiveModeButton_Click(object sender, RoutedEventArgs e)
+        {
+            observingModeButton.IsEnabled = true;
+            passiveModeButton.IsEnabled = false;
+
+            isActive = false;
+
+            ModeHistory item = new ModeHistory() { ModeStatus = "0", CreatedDate = DateTime.Now };
+            await MobileServicesHelper.InsertModeHistory(item);
+        }
     }
 }

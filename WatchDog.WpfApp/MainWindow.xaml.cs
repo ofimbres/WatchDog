@@ -1,4 +1,5 @@
 ﻿using Microsoft.Kinect;
+using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,6 +33,8 @@ namespace WatchDog.WpfApp
         private DispatcherTimer timer;
         private WriteableBitmap lastFrame;
 
+        private bool canPublish;
+
         //private readonly KinectWindowViewModel viewModel;
 
         public MainWindow()
@@ -47,26 +50,22 @@ namespace WatchDog.WpfApp
             ksm.ColorStreamEnabled = true;
 
             this.DataContext = ksm;
+
+
+        }
+
+        private async Task Init()
+        {
+            //NotificationHubHelper.r
+
+            //SubscriptionClient Client = SubscriptionClient.CreateFromConnectionString
+            //    (ServiceBus.CONNECTIONSTRING, ServiceBus.TOPIC_PATH_FOR_MODES, ServiceBus.DEFAULT_SUBSCRIPTIONNAME_FOR_MODES);
+
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             SetDefaultValues();
-            //this.viewModel = new KinectWindowViewModel();
-
-            //// The KinectSensorManager class is a wrapper for a KinectSensor that adds
-            //// state logic and property change/binding/etc support, and is the data model
-            //// for KinectDiagnosticViewer.
-            //this.viewModel.KinectSensorManager = new KinectSensorManager();
-
-            //Binding sensorBinding = new Binding("KinectSensor");
-            //sensorBinding.Source = this;
-            //BindingOperations.SetBinding(this.viewModel.KinectSensorManager, KinectSensorManager.KinectSensorProperty, sensorBinding);
-
-            //// Attempt to turn on Skeleton Tracking for each Kinect Sensor
-            //this.viewModel.KinectSensorManager.SkeletonStreamEnabled = true;
-
-            //this.DataContext = this.viewModel;
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(10d);
@@ -83,7 +82,10 @@ namespace WatchDog.WpfApp
         // http://stackoverflow.com/a/11720080/1118485
         private async void TimerTick(object sender, EventArgs e)
         {
-            await PublishPhoto();
+            if (canPublish)
+            {
+                await PublishPhoto();
+            }
         }
 
         #region KINECT EVENTS

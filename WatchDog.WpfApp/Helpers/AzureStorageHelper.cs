@@ -20,7 +20,6 @@ namespace WatchDog.WpfApp
             "DefaultEndpointsProtocol=https;AccountName=testing2;AccountKey=7TVHhJByZrsgxXAYQa4aNwROPxuBJ9bbX6WvnGZJI4rmBQ3l7r+21txId07VVvD6VjQ/LLkYUiCaGmO7maeCJQ==";
 
         private const string CONTAINER_NAME = "mycontainer";
-        private const string QUEUE_NAME = "myqueue";
 
 
         public static async Task<Uri> UploadImage(WriteableBitmap bitmapSource)
@@ -87,45 +86,6 @@ namespace WatchDog.WpfApp
         //    // Create a message and add it to the queue.
         //    CloudQueueMessage message = new CloudQueueMessage(url);
         //    queue.AddMessage(message);
-        //}
-
-
-        //public static void A()
-        //{
-        //    // Retrieve storage account from connection string
-        //    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(STORAGE_CONNECTIONSTRING);
-
-        //    // Create the queue client
-        //    CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-
-        //    // Retrieve a reference to a queue
-        //    CloudQueue queue = queueClient.GetQueueReference("myqueue");
-
-        //    // Get the next message
-        //    CloudQueueMessage retrievedMessage = queue.GetMessage();
-
-        //    //Process the message in less than 30 seconds, and then delete the message
-        //    queue.DeleteMessage(retrievedMessage);
-        //}
-
-        //public static void List()
-        //{
-        //    // Retrieve storage account from connection string.
-        //    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(STORAGE_CONNECTIONSTRING);
-
-        //    // Create the blob client. 
-        //    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-
-        //    // Retrieve reference to a previously created container.
-        //    CloudBlobContainer container = blobClient.GetContainerReference(CONTAINER_NAME);
-
-        //    // Loop over items within the container and output the length and URI.
-        //    foreach (IListBlobItem item in container.ListBlobs("", false))
-        //    {
-        //        CloudBlockBlob blob = (CloudBlockBlob)item;
-
-        //        Console.WriteLine("Block blob of length {0}: {1}", blob.Properties.Length, blob.Uri);
-        //    }
         //}
     }
 }
