@@ -116,6 +116,7 @@
     <Compile Include="services\mobile services\testingMS2\push.register.cs">
       <ConnectedServiceReference>testingMS2</ConnectedServiceReference>
     </Compile>
+    <Compile Include="VisualTreeHelperExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

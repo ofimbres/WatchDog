@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace WatchDog.WpfApp.Models
 {
-    [DataContract(Name="PhotoAudits")]
-    public class PhotoAudit
+    [DataContract(Name = "ModeHistory")]
+    public class ModeHistory
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("url")]
-        public string Url { get; set; }
-        [JsonProperty("createdDate", ItemConverterType=typeof(JavaScriptDateTimeConverter))]
-        //[JsonConverter(typeof(JavaScriptDateTimeConverter))]
+        [JsonProperty("modeStatus")]
+        public string ModeStatus { get; set; }
+        [JsonProperty("createdDate")]
         public DateTime CreatedDate { get; set; }
     }
+
 }

@@ -8,14 +8,29 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListBox x:Name="listbox" HorizontalAlignment="Left" Height="255" Margin="37,138,0,0" VerticalAlignment="Top" Width="240">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Image Source="{Binding Source}" />
-                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
         <Button Content="Create Subscription" HorizontalAlignment="Left" Margin="347,50,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <TextBox x:Name="textbox" HorizontalAlignment="Left" Margin="37,53,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="286"/>
+        <TextBox x:Name="textbox" HorizontalAlignment="Left" Margin="37,53,0,0" TextWrapping="Wrap" Text="Subscriber name" VerticalAlignment="Top" Width="286"/>
+        <ListView x:Name="listView" HorizontalAlignment="Left" Height="210" Margin="37,560,0,-2" VerticalAlignment="Top" Width="1276" Background="#FFF1F1F1"
+    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+    ScrollViewer.HorizontalScrollMode="Enabled"
+    ScrollViewer.VerticalScrollMode="Disabled"
+    ScrollViewer.ZoomMode="Disabled"
+                  SelectionChanged="listView_SelectionChanged">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{Binding Source}" Width="220" />
+                        <TextBlock Text="{Binding CreatedDate}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Image x:Name="selectedImage" HorizontalAlignment="Left" Height="512" Margin="578,10,0,0" VerticalAlignment="Top" Width="735"/>
     </Grid>
 </Page>

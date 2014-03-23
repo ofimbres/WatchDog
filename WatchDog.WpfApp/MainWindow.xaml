@@ -2,8 +2,8 @@
         xmlns:kt="clr-namespace:WatchDog.Visors;assembly=WatchDog.Visors"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525"
-        Background="#FF9238AC">
+        Title="MainWindow" Height="423.684" Width="525"
+        Background="#FF232323">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,16 +14,17 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Background="White">
-            <Button x:Name="TurnOnRGBVisorButton" Content="Turn on RGB Visor" Click="TurnOnRGBVisorButton_Click" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" Margin="10,10,0,0" />
-            <Button x:Name="TurnOnInfrarredVisorButton" Content="Turn on Infrarred Visor" Click="TurnOnInfrarredVisorButton_Click" Margin="10,57,0,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" />
+        <Grid Background="#FF209AFF">
+            <Button x:Name="TurnOnRGBVisorButton" Content="Turn on RGB Visor" Click="TurnOnRGBVisorButton_Click" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="141" Margin="10,10,0,0" />
+            <Button x:Name="TurnOnInfrarredVisorButton" Content="Turn on Infrarred Visor" Click="TurnOnInfrarredVisorButton_Click" Margin="156,10,0,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="141" />
 
-            <Button x:Name="AbleSkeletonTrackingButton" Content="Able Skeleton Tracking" Click="AbleSkeletonTrackingButton_Click" Margin="0,104,10,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="180" />
-            <Button x:Name="DisableSkeletonTrackingButton" Content="Disable Skeleton Tracking" Click="DisableSkeletonTrackingButton_Click" Margin="0,151,10,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="180" />
+            <Button x:Name="AbleSkeletonTrackingButton" Content="Able Skeleton Tracking" Click="AbleSkeletonTrackingButton_Click" Margin="0,48,149,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="141" />
+            <Button x:Name="DisableSkeletonTrackingButton" Content="Disable Skeleton Tracking" Click="DisableSkeletonTrackingButton_Click" Margin="0,48,3,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="141" />
+            <TextBox ScrollViewer.VerticalScrollBarVisibility="Visible" x:Name="logTextbox" FontFamily="Consolas" Margin="10,0,10,10" TextWrapping="Wrap" Height="262" VerticalAlignment="Bottom"/>
         </Grid>
 
         <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Grid.Column="1">

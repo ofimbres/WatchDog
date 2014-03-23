@@ -22,6 +22,8 @@ using System.Net.Http;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -58,18 +60,24 @@ namespace WatchDog.W8Demo
 
             while (true)
             {
-                string message = await ServiceBusHelper.RetrieveMessage<string>(subscription);
+               
+                var vm = await ServiceBusHelper.RetrieveMessage(subscription);
 
                 uiDispatcher.RunAsync(CoreDispatcherPriority.Normal,
                                         async () =>
                                         {
-                                            PhotoViewModel vm = new PhotoViewModel();
-                                            vm.Url = message;
-                                            vm.Source = await DownloadPhoto(message);
-
+                                            vm.Source = await DownloadPhoto(vm.Url);
                                             itemsForListBox.Add(vm);
+
+                                            ScrollToBottom();
                                         });
             }
+        }
+
+        private void ScrollToBottom()
+        {
+            var scrollViewer = listView.GetFirstDescendantOfType<ScrollViewer>();
+            scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth);
         }
 
         private async void InitNotificationsAsync()
@@ -89,17 +97,20 @@ namespace WatchDog.W8Demo
             await RegisterDevice();
         }
 
-        private async Task RegisterDevice()
+        private async Task<string> RegisterDevice()
         {
             var result = await NotificationHubHelper.RegisterDevice();
 
             // Displays the registration ID so you know it was successful
             if (result.RegistrationId != null)
             {
-                var dialog = new MessageDialog("Registration successful: " + result.RegistrationId);
-                dialog.Commands.Add(new UICommand("OK"));
-                await dialog.ShowAsync();
+                //var dialog = new MessageDialog("Registration successful: " + result.RegistrationId);
+                //dialog.Commands.Add(new UICommand("OK"));
+                //await dialog.ShowAsync();
+                return result.RegistrationId;
             }
+
+            throw new InvalidOperationException("result");
         }
 
         private async Task<ImageSource> DownloadPhoto(string url)
@@ -123,19 +134,32 @@ namespace WatchDog.W8Demo
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            string subscriptionName = textbox.Text;
-            await ServiceBusHelper.CreateSubscription(subscriptionName);
+            //string subscriptionName = textbox.Text;
+            //await ServiceBusHelper.CreateSubscription(subscriptionName);
 
             itemsForListBox = new ObservableCollection<PhotoViewModel>();
-            listbox.ItemsSource = itemsForListBox;
+            listView.ItemsSource = itemsForListBox;
             //InitNotificationsAsync();
-            RetrieveCloudMessages(subscriptionName);
+
+            await NotificationHubHelper.CreatePushNotificationChannel();
+            var registrationId = await RegisterDevice();
+
+            await ServiceBusHelper.CreateSubscription(registrationId);
+            RetrieveCloudMessages(registrationId);
+        }
+
+        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PhotoViewModel item = listView.SelectedItem as PhotoViewModel;
+            selectedImage.Source = item.Source;
         }
     }
-
+    
     public class PhotoViewModel
     {
         public string Url { get; set; }
+        public string CreatedDate { get; set; }
+
         public ImageSource Source { get; set; }
     }
 }

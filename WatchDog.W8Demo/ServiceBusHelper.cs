@@ -27,16 +27,33 @@ namespace WatchDog.W8Demo
 
         public static async Task CreateSubscription(string subscriptionName)
         {
-            await Subscription.CreateAsync(TOPIC_PATH, subscriptionName, CONNECTIONSTRING);
-        }
-
-        public static async Task<T> RetrieveMessage<T>(Subscription photosSubscription)
-        {
-            T message;
+            bool flag = false;
             try
             {
-                //message = await photosQueue.ReceiveAsync<T>();
-                message = await photosSubscription.ReceiveAsync<T>();
+                await Subscription.CreateAsync(TOPIC_PATH, subscriptionName, CONNECTIONSTRING);
+            }
+            catch (Exception ex)
+            {
+                flag = true;
+            }
+
+            if (flag)
+            {
+                await Subscription.DeleteAsync(TOPIC_PATH, subscriptionName, CONNECTIONSTRING);
+                await CreateSubscription(subscriptionName);
+            }
+        }
+
+        public static async Task<PhotoViewModel> RetrieveMessage(Subscription photosSubscription)
+        {
+            PhotoViewModel result;
+            try
+            {
+                string[] message = (await photosSubscription.ReceiveAsync<string>()).Split(',');
+                result = new PhotoViewModel()
+                {
+                    Url = message[0], CreatedDate = message[1]
+                };
             }
             catch (MessagingException ex)
             {
@@ -44,7 +61,7 @@ namespace WatchDog.W8Demo
                 throw ex;
             }
 
-            return message;
+            return result;
         }
     }
 }

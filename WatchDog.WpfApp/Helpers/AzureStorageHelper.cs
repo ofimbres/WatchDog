@@ -26,7 +26,7 @@ namespace WatchDog.WpfApp
         public static async Task<Uri> UploadImage(WriteableBitmap bitmapSource)
         {
             // create a png bitmap encoder which knows how to save a .png file
-            BitmapEncoder encoder = new PngBitmapEncoder();
+            BitmapEncoder encoder = new JpegBitmapEncoder();
 
             // create frame from the writable bitmap and add to encoder
             encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
@@ -38,7 +38,7 @@ namespace WatchDog.WpfApp
 
                 string time = System.DateTime.Now.ToString("yyyy-MM-dd--hh'-'mm'-'ss", CultureInfo.CurrentUICulture.DateTimeFormat);
 
-                CloudBlockBlob blob = await UploadImageToBlobContainer(time, fs);
+                CloudBlockBlob blob = await UploadImageToBlobContainer(time + ".jpg", fs);
                 string url = blob.Uri.AbsoluteUri;
                 //PublishQueueMessage(url);
 

@@ -120,6 +120,8 @@ namespace WatchDog.WpfApp
 
         private async Task PublishPhoto()
         {
+            SetTextUILog("Publishing...");
+
             // Step 1: Upload to a blob storage
             var uri = await AzureStorageHelper.UploadImage(lastFrame);
 
@@ -132,6 +134,7 @@ namespace WatchDog.WpfApp
             };
             await MobileServicesHelper.InsertPhotoAudit(photo);
 
+            SetTextUILog(" success: " + photo.Url + "\r\n\r\n");
             Debug.WriteLine("Photo published successfully: " + photo.Id + ", " + photo.Url);
         }
 
@@ -164,5 +167,11 @@ namespace WatchDog.WpfApp
             ksm.SkeletonStreamEnabled = true;
         }
         #endregion
+
+        private void SetTextUILog(string text)
+        {
+            logTextbox.Text += text;
+            logTextbox.ScrollToEnd();
+        }
     }
 }
