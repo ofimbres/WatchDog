@@ -51,7 +51,7 @@ namespace WatchDog.WpfApp
 
             this.DataContext = ksm;
 
-
+            //ServiceBus _bus = ServiceBus.Setup(ServiceBusUtilities.GetServiceBusCredentials());
         }
 
         private async Task Init()

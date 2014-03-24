@@ -110,6 +110,7 @@ namespace WatchDog.W8Demo
                                         {
                                             vm.Source = await DownloadPhoto(vm.Url);
                                             itemsForListBox.Add(vm);
+                                            listView.SelectedItem = vm;
 
                                             ScrollToBottom();
                                         });
@@ -159,7 +160,7 @@ namespace WatchDog.W8Demo
 
             NotificationHubHelper.Channel.PushNotificationReceived += async (s, e) =>
             {
-                    e.Cancel = true;
+                e.Cancel = true;
 
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
