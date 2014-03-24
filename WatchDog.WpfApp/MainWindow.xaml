@@ -14,16 +14,16 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="320" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Background="#FF209AFF">
-            <Button x:Name="TurnOnRGBVisorButton" Content="Turn on RGB Visor" Click="TurnOnRGBVisorButton_Click" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="141" Margin="10,10,0,0" />
-            <Button x:Name="TurnOnInfrarredVisorButton" Content="Turn on Infrarred Visor" Click="TurnOnInfrarredVisorButton_Click" Margin="156,10,0,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="141" />
+        <Grid Background="#FFE5F3F7">
+            <Button x:Name="TurnOnRGBVisorButton" Content="Turn on RGB Visor" Click="TurnOnRGBVisorButton_Click" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="130" Margin="10,10,0,0" />
+            <Button x:Name="TurnOnInfrarredVisorButton" Content="Turn on Infrarred Visor" Click="TurnOnInfrarredVisorButton_Click" Margin="169,10,0,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left" Width="130" />
 
-            <Button x:Name="AbleSkeletonTrackingButton" Content="Able Skeleton Tracking" Click="AbleSkeletonTrackingButton_Click" Margin="0,48,149,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="141" />
-            <Button x:Name="DisableSkeletonTrackingButton" Content="Disable Skeleton Tracking" Click="DisableSkeletonTrackingButton_Click" Margin="0,48,3,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="141" />
+            <Button x:Name="AbleSkeletonTrackingButton" Content="Able Skeleton Tracking" Click="AbleSkeletonTrackingButton_Click" Margin="0,60,169,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="141" />
+            <Button x:Name="DisableSkeletonTrackingButton" Content="Disable Skeleton Tracking" Click="DisableSkeletonTrackingButton_Click" Margin="0,60,10,0" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="141" />
             <TextBox ScrollViewer.VerticalScrollBarVisibility="Visible" x:Name="logTextbox" FontFamily="Consolas" Margin="10,0,10,10" TextWrapping="Wrap" Height="262" VerticalAlignment="Bottom"/>
         </Grid>
 

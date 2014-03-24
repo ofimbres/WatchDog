@@ -54,6 +54,9 @@ namespace WatchDog.W8Demo
             await GetDefaultSubscriberNameAsync();
             textbox.Text = defaultSubscriberName;
 
+            itemsForListBox = new ObservableCollection<PhotoViewModel>();
+            listView.ItemsSource = itemsForListBox;
+
             // Create subscriptions
             await ServiceBusHelper.CreateModeStatusSubscription(defaultSubscriberName);
             this.MODE_STATUS_OKButton.Text = "OK";
@@ -100,13 +103,6 @@ namespace WatchDog.W8Demo
 
             while (true)
             {
-                // is that makes sence? I don't think so!
-                //if (!isActive)
-                //{
-                //    await Task.Delay(600);
-                //    continue;
-                //}
-
                 var vm = await ServiceBusHelper.RetrievePhotoAuditMessage(subscription);
 
                 uiDispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -163,6 +159,8 @@ namespace WatchDog.W8Demo
 
             NotificationHubHelper.Channel.PushNotificationReceived += async (s, e) =>
             {
+                    e.Cancel = true;
+
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     await ShowDialogToActivateCameraStreaming();
@@ -172,15 +170,23 @@ namespace WatchDog.W8Demo
             defaultSubscriberName = await RegisterDevice();
         }
 
+        bool isActiveDialog;
         private async Task ShowDialogToActivateCameraStreaming()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var dialog = new MessageDialog("Activate camera 'Live Streaming?'");
-                dialog.Commands.Add(new UICommand("OK"));
-                dialog.Commands.Add(new UICommand("No"));
+                if (!isActiveDialog)
+                {
+                    isActiveDialog = true;
 
-                await dialog.ShowAsync();
+                    var dialog = new MessageDialog("Activate camera 'Live Streaming?'");
+                    dialog.Commands.Add(new UICommand("OK"));
+                    dialog.Commands.Add(new UICommand("No"));
+
+                    await dialog.ShowAsync();
+
+                    isActiveDialog = false;
+                }
             });
         }
 
@@ -219,10 +225,10 @@ namespace WatchDog.W8Demo
             return image;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            itemsForListBox = new ObservableCollection<PhotoViewModel>();
-            listView.ItemsSource = itemsForListBox;
+            selectedImage.Source = null;
+            itemsForListBox.Clear();
         }
 
         private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -234,7 +240,7 @@ namespace WatchDog.W8Demo
         private async void observingModeButton_Click(object sender, RoutedEventArgs e)
         {
             observingModeButton.IsEnabled = false;
-            passiveModeButton.IsEnabled = true;
+            //passiveModeButton.IsEnabled = true;
 
             isActive = true;
 
@@ -246,7 +252,7 @@ namespace WatchDog.W8Demo
         private async void passiveModeButton_Click(object sender, RoutedEventArgs e)
         {
             observingModeButton.IsEnabled = true;
-            passiveModeButton.IsEnabled = false;
+            //passiveModeButton.IsEnabled = false;
 
             isActive = false;
 

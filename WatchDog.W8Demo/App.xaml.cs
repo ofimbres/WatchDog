@@ -44,6 +44,8 @@ namespace WatchDog.W8Demo
             this.Suspending += OnSuspending;
         }
 
+        public string AppState { get; set; }
+
 //        public static MobileServiceClient MobileService =
 //            new MobileServiceClient("https://testingms2.azure-mobile.net/", "fwcUFdgJMBJOpgyTUmUtqRBmeuqPXa32");
 
@@ -89,6 +91,7 @@ namespace WatchDog.W8Demo
         /// <param name="e">Details about the launch request and process.</param>
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            AppState = "EXECUTED";
             ////////////////var a = e.Arguments;
             ////////////////var dialog = new MessageDialog(a);
             ////////////////dialog.Commands.Add(new UICommand(e.PreviousExecutionState.ToString()));
@@ -158,6 +161,8 @@ namespace WatchDog.W8Demo
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            AppState = "SUSPENDED";
+
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();

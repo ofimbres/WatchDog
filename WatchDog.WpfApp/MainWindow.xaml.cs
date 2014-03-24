@@ -63,7 +63,7 @@ namespace WatchDog.WpfApp
 
         }
 
-        private void WindowLoaded(object sender, RoutedEventArgs e)
+        private async void WindowLoaded(object sender, RoutedEventArgs e)
         {
             SetDefaultValues();
 
@@ -71,6 +71,44 @@ namespace WatchDog.WpfApp
             timer.Interval = TimeSpan.FromSeconds(10d);
             timer.Tick += TimerTick;
             timer.Start();
+
+            // Create subscriptions
+            await ServiceBusHelper.CreateModeStatusSubscription();
+
+            // Activate listeners
+            RetrieveModeStatusCloudMessages();
+
+            // isActiveOrNot? according to the server
+            canPublish = await MobileServicesHelper.GetLastModeStatus();
+        }
+
+        private async Task RetrieveModeStatusCloudMessages()
+        {
+            var uiDispatcher = this.Dispatcher;
+
+            SubscriptionClient modeSubscription = SubscriptionClient.CreateFromConnectionString(
+                ServiceBusHelper.CONNECTIONSTRING2, ServiceBusHelper.TOPIC_PATH_FOR_MODES, ServiceBusHelper.DEFAULT_SUBSCRIPTIONNAME_FOR_MODES);
+
+            while (true)
+            {
+                string modeStatusMessage = await ServiceBusHelper.RetrieveModeStatusMessage(modeSubscription);
+
+                uiDispatcher.BeginInvoke(
+                                        new Action(() =>
+                                        {
+                                            if (modeStatusMessage != null)
+                                            {
+                                                if (modeStatusMessage.Equals("1"))
+                                                {
+                                                    canPublish = true;
+                                                }
+                                                else
+                                                {
+                                                    canPublish = false;
+                                                }
+                                            }
+                                        }), DispatcherPriority.Normal);
+            }
         }
 
 
@@ -100,7 +138,7 @@ namespace WatchDog.WpfApp
         private bool notifFlag;
         private async void KinectSkeletonViewer_SkeletonTrackingStateChanged(object sender, Visors.EventHandlers.SkeletonTrackingStateEventArgs e)
         {
-            if (e.SkeletonDetected && !notifFlag)
+            if (e.SkeletonDetected && !notifFlag && canPublish)
             {
                 notifFlag = true;
 
