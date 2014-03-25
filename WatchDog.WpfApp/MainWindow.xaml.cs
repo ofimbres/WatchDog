@@ -30,10 +30,13 @@ namespace WatchDog.WpfApp
     public partial class MainWindow : Window
     {
         private KinectSensorManager ksm;
-        private DispatcherTimer timer;
+        private DispatcherTimer timer1; // to Publish Photos
+        private DispatcherTimer timer2; // to real-time streaming
+        
         private WriteableBitmap lastFrame;
 
         private bool canPublish;
+        private ServiceBus _bus;
 
         //private readonly KinectWindowViewModel viewModel;
 
@@ -51,7 +54,7 @@ namespace WatchDog.WpfApp
 
             this.DataContext = ksm;
 
-            //ServiceBus _bus = ServiceBus.Setup(ServiceBusUtilities.GetServiceBusCredentials());
+            _bus = ServiceBus.Setup(ServiceBusUtilities.GetServiceBusCredentials());
         }
 
         private async Task Init()
@@ -67,11 +70,6 @@ namespace WatchDog.WpfApp
         {
             SetDefaultValues();
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(10d);
-            timer.Tick += TimerTick;
-            timer.Start();
-
             // Create subscriptions
             await ServiceBusHelper.CreateModeStatusSubscription();
 
@@ -80,6 +78,16 @@ namespace WatchDog.WpfApp
 
             // isActiveOrNot? according to the server
             canPublish = await MobileServicesHelper.GetLastModeStatus();
+
+            timer1 = new DispatcherTimer();
+            timer1.Interval = TimeSpan.FromSeconds(10d);
+            timer1.Tick += TimerTick;
+            timer1.Start();
+
+            timer2 = new DispatcherTimer();
+            timer2.Interval = TimeSpan.FromMilliseconds(300);
+            timer2.Tick += TimerTick2;
+            timer2.Start();
         }
 
         private async Task RetrieveModeStatusCloudMessages()
@@ -122,8 +130,17 @@ namespace WatchDog.WpfApp
         {
             if (canPublish)
             {
-                await PublishPhoto();
+                //await PublishPhoto();
             }
+        }
+
+        private void TimerTick2(object sender, EventArgs e)
+        {
+            var stream = ImageEncodingHelper.GetGifStreamFromWriteableBitmap(lastFrame);
+
+            var message = new ImageStreamMessage() { ImageData = stream.ToArray() };
+            _bus.Publish<ImageStreamMessage>(message);
+            Debug.Write("COOL!!");
         }
 
         #region KINECT EVENTS
@@ -131,8 +148,8 @@ namespace WatchDog.WpfApp
 
         private void ColorViewer_OutputImageChanged(object sender, OutputImageEventArgs e)
         {
-            lastFrame = e.Frame;
-            Debug.WriteLine("frame updated");
+            lastFrame = e.Frame.Clone();
+            //Debug.WriteLine("frame updated");
         }
 
         private bool notifFlag;

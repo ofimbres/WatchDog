@@ -110,7 +110,10 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ImageStreamMessage.cs" />
     <Compile Include="Models\PhotoViewModel.cs" />
+    <Compile Include="ServiceBus.cs" />
+    <Compile Include="ServiceBusUtilities.cs" />
     <Compile Include="Services2\MobileServicesHelper.cs" />
     <Compile Include="Models\ModeHistory.cs" />
     <Compile Include="Services2\NotificationHubHelper.cs" />
@@ -150,6 +153,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Client">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.0.2\lib\portable-net45+sl5+netcore45+wp8\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Messaging.Managed">
       <HintPath>..\packages\WindowsAzure.Messaging.Managed.0.1.7.6\lib\netcore45\Microsoft.WindowsAzure.Messaging.Managed.dll</HintPath>
     </Reference>

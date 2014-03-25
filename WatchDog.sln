@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchDog.Visors", "WatchDog
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchDog.W8Demo", "WatchDog.W8Demo\WatchDog.W8Demo.csproj", "{0BA9E833-2657-457F-853D-25B08FC211A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRWeb", "WatchDog.SignalRWeb\SignalRWeb.csproj", "{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,16 @@ Global
 		{0BA9E833-2657-457F-853D-25B08FC211A3}.Release|x86.ActiveCfg = Release|x86
 		{0BA9E833-2657-457F-853D-25B08FC211A3}.Release|x86.Build.0 = Release|x86
 		{0BA9E833-2657-457F-853D-25B08FC211A3}.Release|x86.Deploy.0 = Release|x86
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Release|x64.ActiveCfg = Release|Any CPU
+		{CE79BC15-D557-4771-8FB5-E6B1AA545CE6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

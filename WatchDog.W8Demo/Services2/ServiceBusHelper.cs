@@ -107,5 +107,21 @@ namespace WatchDog.W8Demo
 
             return result;
         }
+
+        public static async Task<ImageStreamMessage> RetrieveImageStreamMessage(Subscription imageStreamSubscription)
+        {
+            ImageStreamMessage result;
+            try
+            {
+                result = await imageStreamSubscription.ReceiveAsync<ImageStreamMessage>();
+            }
+            catch (MessagingException ex)
+            {
+                // we need to catch exception thrown when no message is retrieved.
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

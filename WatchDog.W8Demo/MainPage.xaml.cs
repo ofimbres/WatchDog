@@ -25,11 +25,14 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using WatchDog.W8Demo.Models;
+using Microsoft.AspNet.SignalR.Client;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace WatchDog.W8Demo
 {
+
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -38,6 +41,9 @@ namespace WatchDog.W8Demo
         // by default is turnOff camera
         private bool isActive;
         private string defaultSubscriberName;
+
+        IHubProxy imageStreamProxy;
+        HubConnection hubConnection;
 
         public MainPage()
         {
@@ -82,6 +88,17 @@ namespace WatchDog.W8Demo
                 this.observingModeButton.IsEnabled = true;
                 this.passiveModeButton.IsEnabled = false;
             }
+
+            // testing for hubs
+            var connection = new HubConnection("http://watchdogsignalrweb2.azurewebsites.net");
+            var myHub = connection.CreateHubProxy("ChatHub");
+
+            myHub.On<byte[]>("broadcastMessage",
+                (imageData) => {
+                    var a = imageData;
+                });
+
+            await connection.Start();
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
