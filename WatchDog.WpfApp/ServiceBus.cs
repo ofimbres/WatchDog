@@ -3,8 +3,10 @@ using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using WatchDog.WpfApp.Models;
 
 namespace WatchDog.WpfApp
 {
@@ -106,7 +108,10 @@ namespace WatchDog.WpfApp
 
             try
             {
-                topicClient.Send(new BrokeredMessage(message));
+                string largeBytes = Convert.ToBase64String((message as ImageStreamMessage).ImageData);
+                var brokeredMessage = new BrokeredMessage(largeBytes, new DataContractJsonSerializer(typeof(string)));
+                //brokeredMessage.Properties["Stream"] = "1";
+                topicClient.Send(brokeredMessage);
             }
             catch (Exception x)
             {

@@ -34,6 +34,7 @@ namespace WatchDog.WpfApp
         private DispatcherTimer timer2; // to real-time streaming
         
         private WriteableBitmap lastFrame;
+        private WriteableBitmap lastFrame2;
 
         private bool canPublish;
         private ServiceBus _bus;
@@ -57,15 +58,6 @@ namespace WatchDog.WpfApp
             _bus = ServiceBus.Setup(ServiceBusUtilities.GetServiceBusCredentials());
         }
 
-        private async Task Init()
-        {
-            //NotificationHubHelper.r
-
-            //SubscriptionClient Client = SubscriptionClient.CreateFromConnectionString
-            //    (ServiceBus.CONNECTIONSTRING, ServiceBus.TOPIC_PATH_FOR_MODES, ServiceBus.DEFAULT_SUBSCRIPTIONNAME_FOR_MODES);
-
-        }
-
         private async void WindowLoaded(object sender, RoutedEventArgs e)
         {
             SetDefaultValues();
@@ -84,10 +76,10 @@ namespace WatchDog.WpfApp
             timer1.Tick += TimerTick;
             timer1.Start();
 
-            timer2 = new DispatcherTimer();
-            timer2.Interval = TimeSpan.FromMilliseconds(300);
-            timer2.Tick += TimerTick2;
-            timer2.Start();
+            //timer2 = new DispatcherTimer();
+            //timer2.Interval = TimeSpan.FromMilliseconds(500);
+            //timer2.Tick += TimerTick2;
+            //timer2.Start();
         }
 
         private async Task RetrieveModeStatusCloudMessages()
@@ -120,17 +112,15 @@ namespace WatchDog.WpfApp
         }
 
 
-        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
-
         // http://stackoverflow.com/a/11720080/1118485
         private async void TimerTick(object sender, EventArgs e)
         {
             if (canPublish)
             {
-                //await PublishPhoto();
+                //await Dispatcher.BeginInvoke(new Action(async() =>
+                //{
+                    await PublishPhoto();
+                //}));
             }
         }
 
@@ -148,8 +138,10 @@ namespace WatchDog.WpfApp
 
         private void ColorViewer_OutputImageChanged(object sender, OutputImageEventArgs e)
         {
-            lastFrame = e.Frame.Clone();
+            lastFrame = e.Frame;//.Clone();
             //Debug.WriteLine("frame updated");
+
+            lastFrame2 = e.Frame.Clone();
         }
 
         private bool notifFlag;

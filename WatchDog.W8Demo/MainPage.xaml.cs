@@ -26,6 +26,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using WatchDog.W8Demo.Models;
 using Microsoft.AspNet.SignalR.Client;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -73,6 +74,7 @@ namespace WatchDog.W8Demo
             // Activate listeners
             RetrieveModeStatusCloudMessages();
             RetrieveCloudMessages();
+            RetrieveImageStreamMessages();
 
             // isActiveOrNot? according to the server
             isActive = await MobileServicesHelper.GetLastModeStatus();
@@ -90,15 +92,29 @@ namespace WatchDog.W8Demo
             }
 
             // testing for hubs
-            var connection = new HubConnection("http://watchdogsignalrweb2.azurewebsites.net");
-            var myHub = connection.CreateHubProxy("ChatHub");
+            //var connection = new HubConnection("http://watchdogsignalrweb2.azurewebsites.net");
+            //var myHub = connection.CreateHubProxy("ChatHub");
 
-            myHub.On<byte[]>("broadcastMessage",
-                (imageData) => {
-                    var a = imageData;
-                });
+            //myHub.On<byte[]>("broadcastMessage",
+            //    (imageData) => {
+            //        int a = 2;
+            //        int b = a;
+            //        //selectedImage.Source = await ByteArrayToBitmapImage(imageData);
+            //    });
 
-            await connection.Start();
+            //await connection.Start();
+        }
+
+        private async Task<BitmapImage> ByteArrayToBitmapImage(byte[] byteArray)
+        {
+            var bitmapImage = new BitmapImage();
+
+            var stream = new InMemoryRandomAccessStream();
+            await stream.WriteAsync(byteArray.AsBuffer());
+            stream.Seek(0);
+
+            bitmapImage.SetSource(stream);
+            return bitmapImage;
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -165,6 +181,39 @@ namespace WatchDog.W8Demo
             }
         }
 
+        private async Task RetrieveImageStreamMessages()
+        {
+            var uiDispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
+
+            Subscription modeSubscription = new Subscription(ServiceBusHelper.TOPIC_PATH_IMAGESTREAM
+    , ServiceBusHelper.DEFAULT_IMAGESTREAM_SUBSCRIBER, ServiceBusHelper.CONNECTIONSTRING3);
+
+            while (true)
+            {
+                var modeStatusMessage = await ServiceBusHelper.RetrieveImageStreamMessage(modeSubscription);
+
+                uiDispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        async () =>
+                        {
+                            byte[] image = Convert.FromBase64String(modeStatusMessage);
+
+                            var randomAccessStream = new InMemoryRandomAccessStream();
+                            var outputStream = randomAccessStream.GetOutputStreamAt(0);
+                            var dw = new DataWriter(outputStream);
+                            var task = Task.Factory.StartNew(() => dw.WriteBytes(image));
+                            await task;
+                            await dw.StoreAsync();
+                            await outputStream.FlushAsync();
+
+                            var bmi = new WriteableBitmap( 640,480);
+                            bmi.SetSource(randomAccessStream);
+
+                            selectedImage.Source = bmi;
+                            Debug.WriteLine("RECIBIDO");
+                        });
+            }
+        }
+
         private void ScrollToBottom()
         {
             var scrollViewer = listView.GetFirstDescendantOfType<ScrollViewer>();
@@ -198,7 +247,7 @@ namespace WatchDog.W8Demo
                     isActiveDialog = true;
 
                     var dialog = new MessageDialog("Activate camera 'Live Streaming?'");
-                    dialog.Commands.Add(new UICommand("OK"));
+                    dialog.Commands.Add(new UICommand("OK", new UICommandInvokedHandler(OnOkButton)));
                     dialog.Commands.Add(new UICommand("No"));
 
                     await dialog.ShowAsync();
@@ -206,6 +255,11 @@ namespace WatchDog.W8Demo
                     isActiveDialog = false;
                 }
             });
+        }
+
+        private void OnOkButton(IUICommand command)
+        {
+
         }
 
         private async Task<string> RegisterDevice()

@@ -12,9 +12,9 @@ namespace MvcApplication3.Hubs
     {
         public void DoWork()
         {
-            ServiceBus
-                .Setup(ServiceBusUtilities.GetServiceBusCredentials())
-                .Subscribe<ImageStreamMessage>(this.OnImageReceived);
+            //ServiceBus
+            //    .Setup(ServiceBusUtilities.GetServiceBusCredentials())
+            //    .Subscribe<ImageStreamMessage>(this.OnImageReceived);
         }
 
         void OnImageReceived(ImageStreamMessage message)

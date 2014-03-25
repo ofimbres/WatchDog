@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using WatchDog.W8Demo.Models;
@@ -13,13 +14,17 @@ namespace WatchDog.W8Demo
         public const string TOPIC_PATH_FOR_IMAGES = "testingtopic";
 
         public const string TOPIC_PATH_FOR_MODES = "testingtopicHistory";
+
+        public const string TOPIC_PATH_IMAGESTREAM = "topic_imagestreammessage";
+        public const string DEFAULT_IMAGESTREAM_SUBSCRIBER = "Subscription_ImageStreamMessage";
         //public const string DEFAULT_SUBSCRIPTIONNAME_FOR_MODES = "AllMessages";
 
         public const string CONNECTIONSTRING = 
             "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=default;SharedAccessKey=4pera1gQB0b9o2JWB+IJB7riciTWL8E/vfQsTQG6bsE=";
         public const string CONNECTIONSTRING2 =
             "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=default;SharedAccessKey=iiAsxPzaVuYCFtV0KqbEIU/n+YAZSSxB8i+NS9N8t/A=";
-
+        public const string CONNECTIONSTRING3 =
+            "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=default;SharedAccessKey=oz5In0QgB/BZRU8Ndk1VOTQdQG/6KH3+JYFDChynRoo=";
         //private static Subscription modeSubscription = new Subscription(
         //    TOPIC_PATH_FOR_MODES, DEFAULT_SUBSCRIPTIONNAME_FOR_MODES, CONNECTIONSTRING);
 
@@ -104,16 +109,24 @@ namespace WatchDog.W8Demo
                 // we need to catch exception thrown when no message is retrieved.
                 throw ex;
             }
+                catch (SerializationException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return result;
         }
 
-        public static async Task<ImageStreamMessage> RetrieveImageStreamMessage(Subscription imageStreamSubscription)
+        public static async Task<string> RetrieveImageStreamMessage(Subscription imageStreamSubscription)
         {
-            ImageStreamMessage result;
+            string result;
             try
             {
-                result = await imageStreamSubscription.ReceiveAsync<ImageStreamMessage>();
+                result = await imageStreamSubscription.ReceiveAsync<string>();
             }
             catch (MessagingException ex)
             {
