@@ -17,7 +17,6 @@ namespace WatchDog.W8Demo
 
         public const string TOPIC_PATH_IMAGESTREAM = "topic_imagestreammessage";
         public const string DEFAULT_IMAGESTREAM_SUBSCRIBER = "Subscription_ImageStreamMessage";
-        //public const string DEFAULT_SUBSCRIPTIONNAME_FOR_MODES = "AllMessages";
 
         public const string CONNECTIONSTRING = 
             "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=default;SharedAccessKey=4pera1gQB0b9o2JWB+IJB7riciTWL8E/vfQsTQG6bsE=";
@@ -25,19 +24,6 @@ namespace WatchDog.W8Demo
             "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=default;SharedAccessKey=iiAsxPzaVuYCFtV0KqbEIU/n+YAZSSxB8i+NS9N8t/A=";
         public const string CONNECTIONSTRING3 =
             "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=default;SharedAccessKey=oz5In0QgB/BZRU8Ndk1VOTQdQG/6KH3+JYFDChynRoo=";
-        //private static Subscription modeSubscription = new Subscription(
-        //    TOPIC_PATH_FOR_MODES, DEFAULT_SUBSCRIPTIONNAME_FOR_MODES, CONNECTIONSTRING);
-
-        //private static Topic photosTopic = new Topic(
-        //    TOPIC_PATH, CONNECTIONSTRING);
-        //private static Subscription photosSubscription = new Subscription(
-        //    TOPIC_PATH,
-        //    "AllMessages",
-        //    CONNECTIONSTRING);
-
-        //private static Queue photosQueue = new Queue(
-        //    "testingqueue",
-        //    "Endpoint=sb://testingnothub-ns.servicebus.windows.net/;SharedAccessKeyName=duma;SharedAccessKey=K9lrd/Bmd2zBrMCXDcV3EU+u+2VybryJtFfp+zwrOYI=");
 
         public static async Task CreatePhotoAuditSubscription(string subscriptionName)
         {

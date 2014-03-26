@@ -74,7 +74,7 @@ namespace WatchDog.W8Demo
             // Activate listeners
             RetrieveModeStatusCloudMessages();
             RetrieveCloudMessages();
-            RetrieveImageStreamMessages();
+            //RetrieveImageStreamMessages();
 
             // isActiveOrNot? according to the server
             isActive = await MobileServicesHelper.GetLastModeStatus();
@@ -228,7 +228,7 @@ namespace WatchDog.W8Demo
             {
                 e.Cancel = true;
 
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     await ShowDialogToActivateCameraStreaming();
                 });
@@ -299,7 +299,7 @@ namespace WatchDog.W8Demo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            selectedImage.Source = null;
+            //selectedImage.Source = null;
             itemsForListBox.Clear();
         }
 

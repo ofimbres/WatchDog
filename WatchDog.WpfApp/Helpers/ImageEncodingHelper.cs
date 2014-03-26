@@ -13,7 +13,7 @@ namespace WatchDog.WpfApp.Helpers
         public static MemoryStream GetJpegStreamFromWriteableBitmap(WriteableBitmap bitmapSource)
         {
             // create a png bitmap encoder which knows how to save a .png file
-            BitmapEncoder encoder = new JpegBitmapEncoder();
+            BitmapEncoder encoder = new GifBitmapEncoder();
 
             // create frame from the writable bitmap and add to encoder
             encoder.Frames.Add(BitmapFrame.Create(bitmapSource));

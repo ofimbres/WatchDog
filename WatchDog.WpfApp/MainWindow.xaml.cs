@@ -101,10 +101,12 @@ namespace WatchDog.WpfApp
                                                 if (modeStatusMessage.Equals("1"))
                                                 {
                                                     canPublish = true;
+                                                    SetTextUILog("=== TURN ON ===");
                                                 }
                                                 else
                                                 {
                                                     canPublish = false;
+                                                    SetTextUILog("=== TURN OFF ===");
                                                 }
                                             }
                                         }), DispatcherPriority.Normal);
@@ -141,7 +143,7 @@ namespace WatchDog.WpfApp
             lastFrame = e.Frame;//.Clone();
             //Debug.WriteLine("frame updated");
 
-            lastFrame2 = e.Frame.Clone();
+            //lastFrame2 = e.Frame.Clone();
         }
 
         private bool notifFlag;

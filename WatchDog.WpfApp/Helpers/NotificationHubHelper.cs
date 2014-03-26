@@ -26,7 +26,7 @@ namespace WatchDog.WpfApp
             "<wp:Notification xmlns:wp='WPNotification'>" +
             "<wp:Toast>" +
             "<wp:Text1>Human detected!</wp:Text1>" +
-            "<wp:Text2>Test message</wp:Text2>" +
+            "<wp:Text2>Open me!</wp:Text2>" +
             "</wp:Toast>" +
             "</wp:Notification>";
 
@@ -34,7 +34,7 @@ namespace WatchDog.WpfApp
         {
             NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString(CONNECTION_STRING, NOTIFICATIONHUB_PATH);
             await hub.SendWindowsNativeNotificationAsync(W8Toast);
-            //await hub.SendMpnsNativeNotificationAsync(WP8Toast);
+            await hub.SendMpnsNativeNotificationAsync(WP8Toast);
         }
     }
 }

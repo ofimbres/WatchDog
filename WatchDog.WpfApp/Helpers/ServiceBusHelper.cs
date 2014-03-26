@@ -63,10 +63,12 @@ namespace WatchDog.WpfApp.Helpers
             {
                 try
                 {
+                    string result = message.Properties["messagenumber"].ToString();
+                    
                     // Remove message from subscription
                     message.Complete();
 
-                    return message.Properties["messagenumber"].ToString();
+                    return result;
                 }
                 catch (Exception)
                 {
